@@ -2,9 +2,10 @@
 
 namespace Framework;
 
-class Router {
+class Router
+{
     private array $routes = [];
-    
+
     public function add(string $method, string $path, array $controller)
     {
         $path = $this->normalizePath($path);
@@ -20,7 +21,7 @@ class Router {
         $path = trim($path, '/');
         $path = "/{$path}/";
         $path = preg_replace('#[/]{2,}#', '/', $path);
-    
+
         return $path;
     }
 
@@ -29,6 +30,16 @@ class Router {
         $path = $this->normalizePath($path);
         $method = strtoupper($method);
 
-        echo $path . $method;
+        foreach ($this->routes as $route) {
+            if (!preg_match("#^{$route['path']}$#", $path) || $route['method'] !== $method) {
+                echo "404 - route not found";
+                continue;
+            }
+
+            [$class, $function] = $route['controller'];
+
+            $controllerInstance = new $class;
+            $controllerInstance->{$function}();
+        }
     }
 }
