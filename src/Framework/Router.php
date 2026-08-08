@@ -30,16 +30,24 @@ class Router
         $path = $this->normalizePath($path);
         $method = strtoupper($method);
 
+        $matched = false;
+
         foreach ($this->routes as $route) {
             if (!preg_match("#^{$route['path']}$#", $path) || $route['method'] !== $method) {
-                echo "404 - route not found";
                 continue;
             }
 
+            $matched = true;
             [$class, $function] = $route['controller'];
 
             $controllerInstance = new $class;
             $controllerInstance->{$function}();
+
+            return;
+        }
+
+        if (!$matched) {
+            echo "404 - route not found";
         }
     }
 }

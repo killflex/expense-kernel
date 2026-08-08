@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($title) ? htmlspecialchars($title) . ' - Expencify' : 'Expencify - Smart Expense & Transaction Tracker'; ?></title>
+    <title><?php echo isset($title) ? e($title) . ' - Expencify' : 'Expencify - Smart Expense & Transaction Tracker'; ?></title>
 
     <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,10 +48,15 @@
                 </button>
 
                 <!-- Navigation Links & Actions -->
+                <?php
+                $currentUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+                $isAbout = str_contains($currentUri, 'about');
+                $isHome = !$isAbout;
+                ?>
                 <nav class="nav-menu" id="primary-nav-menu">
                     <ul class="nav-links-list">
                         <li>
-                            <a href="/" class="nav-link active" id="nav-link-dashboard">
+                            <a href="/" class="nav-link <?php echo $isHome ? 'active' : ''; ?>" id="nav-link-dashboard">
                                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="3" width="7" height="7"></rect>
                                     <rect x="14" y="3" width="7" height="7"></rect>
@@ -62,7 +67,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/about" class="nav-link" id="nav-link-about">
+                            <a href="/about" class="nav-link <?php echo $isAbout ? 'active' : ''; ?>" id="nav-link-about">
                                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <line x1="12" y1="16" x2="12" y2="12"></line>

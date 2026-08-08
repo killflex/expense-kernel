@@ -26,7 +26,7 @@
                         <h4>Application</h4>
                         <ul>
                             <li><a href="/">Transactions</a></li>
-                            <li><a href="/about.php">About Expencify</a></li>
+                            <li><a href="/about">About Expencify</a></li>
                             <li><a href="#new-transaction" id="footer-quick-add">Add Transaction</a></li>
                         </ul>
                     </div>
