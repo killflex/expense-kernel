@@ -12,7 +12,14 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Core Application Stylesheet (Dynamic + Relative Fallback) -->
-    <link rel="stylesheet" href="/assets/main.css">
+    <?php
+    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+    $assetBase = ($scriptDir === '/' || $scriptDir === '.') ? '' : rtrim($scriptDir, '/');
+    $cssFile = __DIR__ . '/../../../../public/assets/main.css';
+    $version = file_exists($cssFile) ? filemtime($cssFile) : time();
+    ?>
+    <link rel="stylesheet" href="<?php echo $assetBase; ?>/assets/main.css?v=<?php echo $version; ?>">
+    <link rel="stylesheet" href="/assets/main.css?v=<?php echo $version; ?>">
 </head>
 
 <body>
@@ -51,7 +58,8 @@
                 <?php
                 $currentUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
                 $isAbout = str_contains($currentUri, 'about');
-                $isHome = !$isAbout;
+                $isRegister = str_contains($currentUri, 'register');
+                $isHome = !$isAbout && !$isRegister;
                 ?>
                 <nav class="nav-menu" id="primary-nav-menu">
                     <ul class="nav-links-list">
