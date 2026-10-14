@@ -18,4 +18,9 @@ class AuthController
             'title' => 'Register'
         ]);
     }
+
+    public function register()
+    {
+        dd($_POST);
+    }
 }
