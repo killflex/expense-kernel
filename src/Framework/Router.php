@@ -9,11 +9,6 @@ class Router
     private array $routes = [];
     private array $middlewares = [];
 
-    public function addMiddleware(string $middleware)
-    {
-        $this->middlewares[] = $middleware;
-    }
-
     public function add(string $method, string $path, array $controller)
     {
         $path = $this->normalizePath($path);
@@ -49,7 +44,14 @@ class Router
             [$class, $function] = $route['controller'];
 
             $controllerInstance = $container ? $container->resolve($class) : new $class;
-            $controllerInstance->{$function}();
+            $action = fn() => $controllerInstance->{$function}();
+
+            foreach (array_reverse($this->middlewares) as $middleware) {
+                $middlewareInstance = $container ? $container->resolve($middleware) : new $middleware;
+                $action = fn() => $middlewareInstance->process($action);
+            }
+
+            echo $action();
 
             return;
         }
@@ -57,5 +59,10 @@ class Router
         if (!$matched) {
             echo "404 - route not found";
         }
+    }
+
+    public function addMiddleware(string $middleware)
+    {
+        $this->middlewares[] = $middleware;
     }
 }
